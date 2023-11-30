@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Cart{% endblock %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h2>Shopping Cart</h2>
+    {% if cart_items %}
+      {% for item in cart_items %}
+        <div class="card mb-3">
+          <div class="card-body">
+            <img src="{{ item.course.thumbnail.url }}" alt="{{ item.course.title }} Thumbnail" class="img-fluid rounded-circle mb-3" width="50">
+            <h5 class="card-title">{{ item.course.title }}</h5>
+            <p class="card-text">{{ item.course.price }}</p>
+            <form method="post" action="{% url 'course:remove_from_cart' course_id=item.course.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">Remove from Cart</button>
+            </form>
+          </div>
+        </div>
+      {% endfor %}
+      <p>Total Amount: {{ total_amount }}</p>
+    {% else %}
+      <p>Your cart is empty.</p>
+    {% endif %}
+  </div>
+{% endblock %}

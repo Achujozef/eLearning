@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}{{ course.title }} Videos{% endblock %}
+
+{% block content %}
+  <div class="container mt-4">
+    <div class="row">
+      <!-- Course Information -->
+      <div class="col-md-6">
+        <img src="{{ course.thumbnail.url }}" alt="{{ course.title }} Thumbnail" class="img-fluid">
+      </div>
+      <div class="col-md-6">
+        <h1>{{ course.title }}</h1>
+        <h5>{{ course.first_description }}</h5>
+        <p>{{ course.second_description }}</p>
+      </div>
+    </div>
+
+    <!-- Videos List -->
+    <h2 class="mt-4">{{ course.title }} Videos</h2>
+    <div class="row">
+      {% for video in videos %}
+        <div class="col-md-6">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title">{{ video.title }}</h5>
+              <iframe width="400" height="215" src="{{ video.video_url }}" frameborder="0" allowfullscreen></iframe>
+              <div class="embed-responsive embed-responsive-16by9">
+                <!-- Button to trigger modal -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#videoModal{{ video.id }}">
+                  Play Video
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="videoModal{{ video.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-body">
+                        <!-- Embedded video with increased height and width -->
+                        <div class="embed-responsive embed-responsive-16by9" style="height: 500px;">
+                            <iframe id="videoIframe{{ video.id }}" class="embed-responsive-item" src="{{ video.video_url }}" allowfullscreen style="width: 100%; height: 100%;"></iframe>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="stopVideo('videoIframe{{ video.id }}')">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <a href="{% url 'course:update_progress' course_id=course.id video_id=video.id %}" class="btn btn-primary mt-3">Mark as Completed</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="mt-4">
+      <h3>Total Completed Modules: {{ progress.completed_modules }} / {{ course.total_modules }}</h3>
+      <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: {{ progress.completed_modules|divisibleby:course.total_modules|yesno:'100,0' }}%;" aria-valuenow="{{ progress.completed_modules }}" aria-valuemin="0" aria-valuemax="{{ course.total_modules }}"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function stopVideo(iframeId) {
+      var iframe = document.getElementById(iframeId);
+      iframe.src = iframe.src;  // This will reset the video source and stop it
+    }
+  </script>
+{% endblock %}

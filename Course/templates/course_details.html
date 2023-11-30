@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% block title %}{{ course.title }} Details{% endblock %}
+
+{% block content %}
+
+  <!-- Top Section: Thumbnail, Title, and First Description -->
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-md-6">
+        <img src="{{ course.thumbnail.url }}" alt="{{ course.title }} Thumbnail" class="img-fluid">
+      </div>
+      <div class="col-md-6">
+        <h1>{{ course.title }}</h1>
+        <h5>{{ course.first_description }}</h5>
+        <p>{{ course.second_description }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Author Details Card -->
+  <div class="container mt-4">
+    <div class="card ">
+      <div class="card-body">
+        <h2 class="card-title">Author: {{ author.name }}</h2>
+        <img src="{{ author.image.url }}" alt="{{ author.name }} Image" class="img-fluid rounded-circle mb-3" width="100">
+        <p class="card-text">{{ author.bio }}</p>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="container mt-4">
+    <h2>What you'll learn</h2>
+    <div class="card">
+        <div class="card-body">
+           
+                <ul class="list-unstyled">
+                    {% for lesson in lessons %}
+                        <li>- {{ lesson.content }}</li>
+                    {% endfor %}
+                </ul>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <!-- Course Details Section -->
+  <div class="container mt-4">
+    <!-- Video Section -->
+    {% if videos %}
+      <div class="row">
+        <div class="col-md-6">
+    {% for video in videos %}
+          {% if video.is_free %}
+            <!-- Display Free Video -->
+            <h2 class="mt-4">{{video.title}}</h2>
+            <iframe width="400" height="215" src="{{ video.video_url }}" frameborder="0" allowfullscreen></iframe>
+          {% endif %}
+          {% endfor %}
+        </div>
+        <div class="col-md-6">
+            <!-- Course Details Card -->
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">Course Details <i class="fas fa-info-circle"></i></h2>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <i class="fas fa-clock"></i> Hours of Video: {{ course_details.hours_of_video }}
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-code"></i> Coding Exercises: {{ course_details.coding_exercises }}
+                        </li>
+                        <li class="list-group-item">
+                            <i class="far fa-file-alt"></i> Articles: {{ course_details.articles }}
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-mobile-alt"></i> Access on Mobile and TV:
+                            {% if course_details.access_on_mobile_and_tv %}
+                                <span class="badge bg-success">Yes</span>
+                            {% else %}
+                                <span class="badge bg-danger">No</span>
+                            {% endif %}
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-certificate"></i> Certificate of Completion:
+                            {% if course_details.certificate_of_completion %}
+                                <span class="badge bg-success">Yes</span>
+                            {% else %}
+                                <span class="badge bg-danger">No</span>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <br>
+
+
+
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h2 class="card-title">Add to Cart <i class="fas fa-shopping-cart"></i></h2>
+                    <p class="card-text">Unlock the full potential of this course now! Don't miss out on valuable content that can enhance your skills and knowledge.</p>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <strong>Price:</strong> {{ course.price }}
+                        </li>
+                    </ul>
+                    {% if course_in_cart %}
+                        <form method="post" action="{% url 'course:remove_from_cart' course_id=course.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger mt-3">Remove from Cart</button>
+                        </form>
+                    {% elif course_already_purchased %}
+                        <a href="{% url 'course:course_details' course_id=course.id %}" class="btn btn-success mt-3">Go to Course</a>
+                    {% else %}
+                        <form method="post" action="{% url 'course:add_to_cart' course_id=course.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary mt-3">Add to Cart</button>
+                        </form>
+                        <form method="post" action="{% url 'course:purchase_course' course_id=course.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary mt-3">Buy Now</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+
+
+
+
+        </div>
+        </div>
+      </div>
+    {% endif %}
+
+<!--Add the course.second_description here -->
+
+    <!-- Reviews Section -->
+    <h2 class="mt-4">Reviews</h2>
+    {% for review in reviews %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">
+                Star Rating: {{ review.star }} <i class="fas fa-star"></i>
+                {% if review.user %}
+                    by {{ review.user.name }}
+                {% endif %}
+            </h5>
+            {% if review.user and review.user.profile_picture %}
+                <img src="{{ review.user.profile_picture.url }}" alt="{{ review.user.name }} Image" class="img-fluid rounded-circle" width="50">
+            {% endif %}
+            <p class="card-text">{{ review.featured_review }}</p>
+        </div>
+    </div>
+{% endfor %}
+  </div>
+
+{% endblock %}

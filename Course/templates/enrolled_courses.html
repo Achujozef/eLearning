@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Enrolled Courses{% endblock %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h2>Enrolled Courses</h2>
+    {% if enrolled_courses %}
+      {% for enrolled_course in enrolled_courses %}
+        <div class="card mb-3">
+          <div class="card-body">
+            <img src="{{ enrolled_course.course.thumbnail.url }}" alt="{{ enrolled_course.course.title }} Thumbnail" class="img-fluid rounded-circle mb-3" width="50">
+            <h5 class="card-title">{{ enrolled_course.course.title }}</h5>
+            <p class="card-text">Enrolled on: {{ enrolled_course.purchase_date }}</p>
+            <a href="{% url 'course:course_videos' course_id=enrolled_course.course.id %}" class="btn btn-primary">Go to Videos</a>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>You haven't enrolled in any courses yet.</p>
+    {% endif %}
+  </div>    
+{% endblock %}
