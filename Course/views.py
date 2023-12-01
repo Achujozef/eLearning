@@ -216,3 +216,24 @@ def submit_contact_form(request):
         form = ContactForm()
 
     return render(request, 'contact_form.html', {'form': form})
+
+
+from django.shortcuts import render, get_object_or_404
+from .models import Course, VideoCategory
+
+def course_videos_two(request, course_id):
+    course = get_object_or_404(Course, pk=course_id)
+    video_categories = VideoCategory.objects.all()
+
+    # Fetch all videos for the course and categorize them by category
+    videos_by_category = {}
+    for category in video_categories:
+        videos_by_category[category] = course.video_set.filter(category=category).order_by('order')
+
+    context = {
+        'course': course,
+        'video_categories': video_categories,
+        'videos_by_category': videos_by_category,
+    }
+
+    return render(request, 'course_2_videos.html', context)

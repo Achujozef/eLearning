@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="container mt-5">
+    <h2 class="text-center mb-4">{{ course.title }} Videos</h2>
+
+    {% for category in video_categories %}
+    <h3>{{ category.name }}</h3>
+    {% with videos=videos_by_category|get:category %}
+      {% if videos %}
+        {% for video in videos %}
+          {# Display video details as needed #}
+          <p>{{ video.title }}</p>
+          <p>{{ video.video_url }}</p>
+          {# Add more fields as necessary #}
+        {% endfor %}
+      {% else %}
+        <p>No videos available for this category.</p>
+      {% endif %}
+    {% endwith %}
+  {% endfor %}
+          
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

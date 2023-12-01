@@ -14,7 +14,7 @@
         <p>{{ course.second_description }}</p>
       </div>
     </div>
-
+    <div id="myPlot" style="height: 500px;"></div>
     <!-- Videos List -->
     <h2 class="mt-4">{{ course.title }} Videos</h2>
     <div class="row">
@@ -58,11 +58,36 @@
     <!-- Progress Bar -->
     <div class="mt-4">
       <h3>Total Completed Modules: {{ progress.completed_modules }} / {{ course.total_modules }}</h3>
-      <div class="progress">
-        <div class="progress-bar" role="progressbar" style="width: {{ progress.completed_modules|divisibleby:course.total_modules|yesno:'100,0' }}%;" aria-valuenow="{{ progress.completed_modules }}" aria-valuemin="0" aria-valuemax="{{ course.total_modules }}"></div>
-      </div>
+      
     </div>
+
+    <!-- Plotly Graph -->
+   
   </div>
+
+  <!-- Plotly CDN -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+  <!-- Plotly Script -->
+  <!-- Plotly Script -->
+<script>
+  const labels = ["Pending", "Completed"];
+  const values = [{{ course.total_modules }},{{ progress.completed_modules }} ];
+
+  const data = [{
+    labels: labels,
+    values: values,
+    type: "pie",
+    marker: { colors: ["rgba(255,0,0,0.6)",  "rgba(0,128,0,0.6)"] }
+  }];
+
+  const layout = { title: "Progress Of The Course" };
+
+  Plotly.newPlot("myPlot", data, layout);
+</script>
+
+
+  <!-- Stop Video Function -->
   <script>
     function stopVideo(iframeId) {
       var iframe = document.getElementById(iframeId);
