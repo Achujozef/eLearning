@@ -1,5 +1,58 @@
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Register</button>
-</form>
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container mt-4">
+    <div class="card text-center">
+      <div class="card-header bg-primary text-white">
+        <h1 class="mb-0">User Registration</h1>
+      </div>
+
+      <div class="card-body">
+        <form method="post" class="text-left">
+            {% csrf_token %}
+            
+            <div class="form-group col-3 mx-auto">
+                <input type="text" name="username" class="form-control form-control-lg " placeholder="Username">
+            </div>
+            <br>
+
+            <div class="form-group col-3 mx-auto">
+                <input type="email" name="email" class="form-control form-control-lg " placeholder="Email">
+            </div>
+            <br>
+
+            <div class="form-group col-3 mx-auto">
+                <input type="password" name="password1" class="form-control form-control-lg " placeholder="Password">
+            </div>
+            <br>
+
+            <div class="form-group col-3 mx-auto">
+                <input type="password" name="password2" class="form-control form-control-lg " placeholder="Confirm Password">
+            </div>
+            <br>
+
+            <!-- Add any additional fields for registration as needed -->
+
+            <button type="submit" class="btn btn-success btn-block ">Register</button>
+        </form>
+        
+        <div class="mt-3">
+            <p>Already have an account? <a href="{% url 'login' %}">Login here</a>.</p>
+        </div>
+      </div>
+      
+      <div id="quote-carousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <blockquote class="blockquote">
+              <p class="mb-0">"Invest in yourself. Your career is the engine of your wealth."</p>
+              <br>
+              <footer class="blockquote-footer">Paul Clitheroe</footer>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+{% endblock %}

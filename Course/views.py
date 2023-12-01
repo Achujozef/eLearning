@@ -6,10 +6,15 @@ import razorpay
 from django.conf import settings
 import time
 from .forms import *
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.shortcuts import render, get_object_or_404
+from .models import Course, VideoCategory
+from django.contrib.auth.decorators import login_required
+
+@login_required(login_url='login')
 def course_details(request, course_id):
     course = get_object_or_404(Course, id=course_id)
 
-    # Retrieve related details
     course_details = CourseDetails.objects.get(course=course)
     reviews = Review.objects.filter(course=course)
     videos = Video.objects.filter(course=course)
@@ -20,7 +25,7 @@ def course_details(request, course_id):
     price_in_float = float(course.price*100)
     client =razorpay.Client(auth=(settings.KEY,settings.SECRET))
     payment=client.order.create({'amount':price_in_float,'currency':'INR','payment_capture':1})
-    print(payment)
+
     context = {
         'course': course,
         'course_details': course_details,
@@ -35,124 +40,90 @@ def course_details(request, course_id):
     
     return render(request, 'course_details.html', context)
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 def course_list(request):
-    # Get all courses
     all_courses = Course.objects.all().order_by('-id')
-
-    # Number of courses to display per page
     per_page = 12
-
-    # Create a Paginator instance
     paginator = Paginator(all_courses, per_page)
-
-    # Get the current page number from the request's GET parameters
     page = request.GET.get('page')
-
     try:
-        # Get the Page object for the requested page number
         courses = paginator.page(page)
     except PageNotAnInteger:
-        # If page is not an integer, deliver the first page
         courses = paginator.page(1)
     except EmptyPage:
-        # If page is out of range (e.g., 9999), deliver the last page of results
         courses = paginator.page(paginator.num_pages)
-
     context = {
         'courses': courses,
         'categories': Category.objects.all(),
     }
-
     return render(request, 'course_list.html', context)
+
 
 def filter_courses(request, category_id):
     if category_id == 'all':
         courses = Course.objects.all().order_by('-id')
     else:
         courses = Course.objects.filter(category_id=category_id).order_by('-id')
-
     context = {
         'courses': courses,
         'categories': Category.objects.all(),
     }
-
     return render(request, 'course_list.html', context)
+
 
 def search_courses(request):
     query = request.GET.get('q', '')
     courses = Course.objects.filter(title__icontains=query).order_by('-id')
-
     context = {
         'courses': courses,
         'categories': Category.objects.all(),
         'query': query,
     }
-
     return render(request, 'course_list.html', context)
 
+
+@login_required(login_url='login')
 def purchase_course(request, course_id):
     course = get_object_or_404(Course, id=course_id)
-
-    # Check if the course is already purchased
     if PurchasedCourses.objects.filter(user=request.user, course=course).exists():
        pass
     else:
         PurchasedCourses.objects.create(user=request.user, course=course)
-       
-
     return redirect('course:course_details', course_id=course_id)
 
-
+@login_required(login_url='login')
 def add_to_cart(request, course_id):
     course = get_object_or_404(Course, id=course_id)
-
-    # Check if the course is already in the cart
     if Cart.objects.filter(user=request.user, course=course).exists():
         pass
     else:
-        # Create a Cart entry
         Cart.objects.create(user=request.user, course=course)
-        
-
     return redirect('course:course_details', course_id=course_id)
 
-
+@login_required(login_url='login')
 def remove_from_cart(request, course_id):
     course = get_object_or_404(Course, id=course_id)
-
-    # Check if the course is in the cart
     cart_entry = Cart.objects.filter(user=request.user, course=course).first()
     if cart_entry:
-        # Remove the course from the cart
         cart_entry.delete()
-       
     else:
        pass
-
     return redirect('course:cart')
 
-
+@login_required(login_url='login')
 def purchase_cart(request):
     cart_entries = Cart.objects.filter(user=request.user)
-
     for cart_entry in cart_entries:
-        # Check if the course is already purchased
         if PurchasedCourses.objects.filter(user=request.user, course=cart_entry.course).exists():
             pass
         else:
-            # Create a PurchasedCourses entry
             PurchasedCourses.objects.create(user=request.user, course=cart_entry.course)
-           
-
-        # Remove the course from the cart
         cart_entry.delete()
 
     return redirect('course:cart')
 
-
-
+@login_required(login_url='login')
 def cart(request):
     if not request.user.is_authenticated:
         return redirect('login')
@@ -171,19 +142,18 @@ def cart(request):
         context = {
             'cart_items': cart_items,
             'total_amount': total_amount,
-            
         }
     return render(request, 'cart.html', context)
 
+@login_required(login_url='login')
 def enrolled_courses(request):
     enrolled_courses = PurchasedCourses.objects.filter(user=request.user)
-
     context = {
         'enrolled_courses': enrolled_courses,
     }
-
     return render(request, 'enrolled_courses.html', context)
 
+@login_required(login_url='login')
 def course_videos(request, course_id):
     course = get_object_or_404(Course, id=course_id)
     videos = Video.objects.filter(course=course).order_by('order')
@@ -197,26 +167,19 @@ def course_videos(request, course_id):
         'remaining':remaining,
         'completed_videos': completed_videos,
     }
-
     return render(request, 'course_videos.html', context)
 
-
+@login_required(login_url='login')
 def update_progress(request, course_id, video_id):
     course = get_object_or_404(Course, id=course_id)
     video = get_object_or_404(Video, id=video_id, course=course)
     progress, created = Progress.objects.get_or_create(user=request.user, course=course)
-
-    # Check if the video is already completed
     if video.order <= progress.completed_modules + 1:
-        # Check if the video is not already marked as completed
         if not CompletedModules.objects.filter(progress=progress, video=video).exists():
             progress.completed_modules += 1
             progress.video = video
             progress.save()
-
-            # Record the completion in CompletedModules
             CompletedModules.objects.create(progress=progress, video=video)
-
     return redirect('course:course_videos', course_id=course_id)
 
 
@@ -228,65 +191,46 @@ def submit_contact_form(request):
         form = ContactForm(request.POST)
 
         if form.is_valid():
-            # Form data is valid, you can access it using cleaned_data
             name = form.cleaned_data['name']
             email = form.cleaned_data['email']
             subject = form.cleaned_data['subject']
             message = form.cleaned_data['message']
-
-            # Process the form data as needed (e.g., send emails, save to database)
-
-            # Redirect to a success page
             return render(request, 'success_page.html', {'name': name, 'email': email})
     else:
-        # If the form is not submitted, create a new form instance
         form = ContactForm()
-
     return render(request, 'contact_form.html', {'form': form})
 
-
-from django.shortcuts import render, get_object_or_404
-from .models import Course, VideoCategory
 
 def course_videos_two(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
     video_categories = VideoCategory.objects.all()
-
-    # Fetch all videos for the course and categorize them by category
     videos_by_category = {}
     for category in video_categories:
         videos_by_category[category] = course.video_set.filter(category=category).order_by('order')
-
     context = {
         'course': course,
         'video_categories': video_categories,
         'videos_by_category': videos_by_category,
     }
-
     return render(request, 'course_2_videos.html', context)
 
-
-
-
+@login_required(login_url='author_login')
 def add_course(request):
     if request.method == 'POST':
         course_form = CourseForm(request.POST, request.FILES)
         details_form = CourseDetailsForm(request.POST)
-
         if course_form.is_valid() and details_form.is_valid():
             course = course_form.save()
             details = details_form.save(commit=False)
             details.course = course
             details.save()
             return redirect('course:course_list') 
-
     else:
         course_form = CourseForm()
         details_form = CourseDetailsForm()
-
     return render(request, 'add_course.html', {'course_form': course_form, 'details_form': details_form})
 
-
+@login_required(login_url='author_login')
 def dashboard(request):
     courses = Course.objects.filter(author=request.user)
     total_students = UserVideoAccess.objects.filter(course__in=courses).count()
@@ -296,22 +240,19 @@ def dashboard(request):
         'total_students': total_students,
         'average_rating': average_rating,
     }
-
     return render(request, 'dashboard.html', context)
 
+@login_required(login_url='author_login')
 def author_courses(request):
-    # Assuming request.user is the author
     courses = Course.objects.filter(author=request.user)
-
     context = {
         'courses': courses,
     }
-
     return render(request, 'author_courses.html', context)
 
+@login_required(login_url='author_login')
 def add_video(request, course_id):
     course = get_object_or_404(Course, id=course_id)
-
     if request.method == 'POST':
         form = VideoForm(request.POST)
         if form.is_valid():
@@ -319,42 +260,67 @@ def add_video(request, course_id):
             video.course = course
             video.save()
             return redirect('course:author_courses') 
-
     else:
         form = VideoForm()
-
     return render(request, 'add_video.html', {'form': form, 'course': course})
 
+@login_required(login_url='author_login')
 def add_lesson(request, course_id):
     course = get_object_or_404(Course, id=course_id)
-
     if request.method == 'POST':
         form = LessonForm(request.POST)
         if form.is_valid():
             lesson = form.save(commit=False)
             lesson.course = course
             lesson.save()
-            return redirect('course:author_courses')  # Redirect to your courses page or any other appropriate view
-
+            return redirect('course:author_courses')
     else:
         form = LessonForm()
-
     return render(request, 'add_lesson.html', {'form': form, 'course': course})
 
+@login_required(login_url='author_login')
 def edit_course(request, course_id):
     course = get_object_or_404(Course, id=course_id)
     coursedetails=get_object_or_404(CourseDetails, course=course)
     if request.method == 'POST':
         course_form = CourseForm(request.POST, request.FILES, instance=course)
         details_form = CourseDetailsForm(request.POST, instance=coursedetails)
-
         if course_form.is_valid() and details_form.is_valid():
             course_form.save()
             details_form.save()
-            return redirect('course:course_list')  # Redirect to your course list view
-
+            return redirect('course:course_list')  
     else:
         course_form = CourseForm(instance=course)
         details_form = CourseDetailsForm(instance=coursedetails)
-
     return render(request, 'edit_course.html', {'course_form': course_form, 'details_form': details_form})
+
+@login_required(login_url='author_login')
+def list_videos(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    videos = Video.objects.filter(course=course)
+    return render(request, 'list_videos.html', {'course': course, 'videos': videos})
+
+@login_required(login_url='author_login')
+def delete_video(request, course_id, video_id):
+    video = get_object_or_404(Video, id=video_id)
+    video.delete()
+    return redirect('course:list_videos_edit', course_id=course_id)
+
+@login_required(login_url='author_login')
+def delete_lesson(request, course_id, lesson_id):
+    lesson = get_object_or_404(Lesson, id=lesson_id)
+    lesson.delete()
+    return redirect('course:add_lesson', course_id=course_id)
+
+@login_required(login_url='author_login')
+def delete_course(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    course_details = CourseDetails.objects.filter(course=course)
+    videos = Video.objects.filter(course=course)
+    lessons = Lesson.objects.filter(course=course)
+    course_details.delete()
+    videos.delete()
+    lessons.delete()
+    course.delete()
+    return redirect('course:author_courses')
+

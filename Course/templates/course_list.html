@@ -34,8 +34,9 @@
 {% endif %}
               <div class="card-body">
                 <h5 class="card-title">{{ course.title }}</h5>
+                <h5 class="text-warning">{{ course.rating }} &#9733;</h5>
                 <p class="card-text">Course Amount: ₹ {{ course.price }}</p>
-                <p class="card-text">Author: {{ course.author.name }}</p>
+                <p class="card-text">Author: {{ course.author.username }}</p>
               </div>
             </div>
           </a>

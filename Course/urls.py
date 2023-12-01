@@ -25,4 +25,8 @@ urlpatterns = [
     path('add_video/<int:course_id>/', add_video, name='add_video'),
     path('add_lesson/<int:course_id>/', add_lesson, name='add_lesson'),
     path('edit_course/<int:course_id>/', edit_course, name='edit_course'),
+    path('list_videos_edit/<int:course_id>/', list_videos, name='list_videos_edit'),
+    path('delete_video/<int:course_id>/<int:video_id>/', delete_video, name='delete_video'),
+    path('delete_lesson/<int:course_id>/<int:lesson_id>/', delete_lesson, name='delete_lesson'),
+    path('delete_course/<int:course_id>/', delete_course, name='delete_course'),
 ]

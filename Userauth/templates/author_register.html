@@ -1,0 +1,56 @@
+{% extends 'adminbase.html' %}
+
+{% block title %}Author Registration{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card text-center">
+        <div class="card-header bg-primary text-white">
+            <h1 class="mb-0">Author Registration</h1>
+        </div>
+
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data" class="text-left">
+                {% csrf_token %}
+
+                <div class="form-group col-3 mx-auto">
+                    <input type="text" name="username" class="form-control form-control-lg" placeholder="Username">
+                </div>
+                <br>
+
+                <div class="form-group col-3 mx-auto">
+                    <input type="email" name="email" class="form-control form-control-lg" placeholder="Email">
+                </div>
+                <br>
+
+                <div class="form-group col-3 mx-auto">
+                    <input type="password" name="password1" class="form-control form-control-lg" placeholder="Password">
+                </div>
+                <br>
+
+                <div class="form-group col-3 mx-auto">
+                    <input type="password" name="password2" class="form-control form-control-lg" placeholder="Confirm Password">
+                </div>
+                <br>
+
+                <div class="form-group col-3 mx-auto">
+                    <label for="id_profile_picture">Profile Picture</label>
+                    <input type="file" class="form-control" id="id_profile_picture" name="profile_picture">
+                </div>
+                <br>
+
+                <div class="form-group col-6 mx-auto">
+                    <label for="id_bio">Bio</label>
+                    <textarea class="form-control" id="id_bio" name="bio"></textarea>
+                </div>
+                <br>
+
+                <button type="submit" class="btn btn-primary btn-block">Register</button>
+            </form>
+        </div>
+        <div class="mt-3">
+            <p>Don't have an account? <a href="{% url 'author_login' %}">Login here</a>.</p>
+          </div>
+    </div>
+</div>
+{% endblock %}

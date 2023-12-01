@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}List Videos{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="mt-4">List of Videos for {{ course.title }}</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Video URL</th>
+                    <th>Is Free</th>
+                    <th>Category</th>
+                    <th>Order</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for video in videos %}
+                    <tr>
+                        <td>{{ video.title }}</td>
+                        <td>{{ video.video_url }}</td>
+                        <td>{{ video.is_free }}</td>
+                        <td>{{ video.category.name }}</td>
+                        <td>{{ video.order }}</td>
+                        <td>
+                            <a href="{% url 'course:delete_video' course.id video.id %}" class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

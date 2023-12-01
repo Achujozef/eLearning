@@ -82,12 +82,6 @@ class PurchasedCourses(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     purchase_date = models.DateTimeField(auto_now_add=True)
-    # razor_pay_order_id =models.CharField(max_length=100,null=True,blank=True)
-    # razor_pay_payment_id =models.CharField(max_length=100,null=True,blank=True)
-    # razor_pay_payment_signature =models.CharField(max_length=100,null=True,blank=True)
-
-    
-    
     def __str__(self):
         return f"{self.user.username} - {self.course.title} (Purchased on {self.purchase_date})"
     

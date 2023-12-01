@@ -1,14 +1,32 @@
 {% extends 'adminbase.html' %}
 
-{% block title %}Add Lessons{% endblock %}
+{% block title %}Add and List Lessons{% endblock %}
 
 {% block content %}
     <div class="container">
-        <h1 class="mt-4">Add Lessons to {{ course.title }}</h1>
+        <h1 class="mt-4">Add and List Lessons for {{ course.title }}</h1>
+        
+        <!-- Form to add a new lesson -->
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit" class="btn btn-success">Save Lessons</button>
         </form>
+        
+        <!-- Section to list and delete existing lessons -->
+        <h2 class="mt-4">Existing Lessons</h2>
+        {% if course.lesson_set.all %}
+            <ul>
+                {% for lesson in course.lesson_set.all %}
+                    <li>
+                        {{ lesson.content }}
+                        <a href="{% url 'course:delete_lesson' course.id lesson.id %}" class="btn btn-danger">Delete</a>
+                        <br><br>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No lessons available for this course.</p>
+        {% endif %}
     </div>
 {% endblock %}
