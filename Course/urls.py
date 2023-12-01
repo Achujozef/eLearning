@@ -22,5 +22,7 @@ urlpatterns = [
     path('add_course/', add_course, name='add_course'),
     path('dashboard/', dashboard, name='instructor_dashboard'),
     path('instructor/courses/', author_courses, name='author_courses'),
-
+    path('add_video/<int:course_id>/', add_video, name='add_video'),
+    path('add_lesson/<int:course_id>/', add_lesson, name='add_lesson'),
+    path('edit_course/<int:course_id>/', edit_course, name='edit_course'),
 ]

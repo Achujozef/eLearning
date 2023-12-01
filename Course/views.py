@@ -1,11 +1,11 @@
 from pyexpat.errors import messages
 from django.shortcuts import redirect, render, get_object_or_404
 from .models import *
-from .forms import ContactForm
+from django.db.models import Avg
 import razorpay
 from django.conf import settings
 import time
-from .forms import CourseForm, CourseDetailsForm
+from .forms import *
 def course_details(request, course_id):
     course = get_object_or_404(Course, id=course_id)
 
@@ -308,3 +308,53 @@ def author_courses(request):
     }
 
     return render(request, 'author_courses.html', context)
+
+def add_video(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+
+    if request.method == 'POST':
+        form = VideoForm(request.POST)
+        if form.is_valid():
+            video = form.save(commit=False)
+            video.course = course
+            video.save()
+            return redirect('course:author_courses') 
+
+    else:
+        form = VideoForm()
+
+    return render(request, 'add_video.html', {'form': form, 'course': course})
+
+def add_lesson(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+
+    if request.method == 'POST':
+        form = LessonForm(request.POST)
+        if form.is_valid():
+            lesson = form.save(commit=False)
+            lesson.course = course
+            lesson.save()
+            return redirect('course:author_courses')  # Redirect to your courses page or any other appropriate view
+
+    else:
+        form = LessonForm()
+
+    return render(request, 'add_lesson.html', {'form': form, 'course': course})
+
+def edit_course(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    coursedetails=get_object_or_404(CourseDetails, course=course)
+    if request.method == 'POST':
+        course_form = CourseForm(request.POST, request.FILES, instance=course)
+        details_form = CourseDetailsForm(request.POST, instance=coursedetails)
+
+        if course_form.is_valid() and details_form.is_valid():
+            course_form.save()
+            details_form.save()
+            return redirect('course:course_list')  # Redirect to your course list view
+
+    else:
+        course_form = CourseForm(instance=course)
+        details_form = CourseDetailsForm(instance=coursedetails)
+
+    return render(request, 'edit_course.html', {'course_form': course_form, 'details_form': details_form})

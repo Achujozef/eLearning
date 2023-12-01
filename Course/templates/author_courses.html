@@ -19,7 +19,9 @@
                             <h5 class="card-title">{{ course.title }}</h5>
                             <p class="card-text">Rating: {{ course.rating }}</p>
                             <p class="card-text">Total Modules: {{ course.total_modules }}</p>
-                            <a href="" class="btn btn-primary">Edit</a>
+                            <a href="{% url 'course:edit_course' course.id %}" class="btn btn-primary">Edit</a>
+                            <a href="{% url 'course:add_video' course.id %}" class="btn btn-primary">Add Videos</a>
+                            <a href="{% url 'course:add_lesson' course.id %}" class="btn btn-primary">Lessons</a>
                         </div>
                     </div>
                 </div>
