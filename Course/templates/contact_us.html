@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %} 
+{% block title %}Contact Us{% endblock %}
+
+{% block content %}
+  <div class="container mt-4">
+
+    <div  class="text-center">
+    <img src="{% static 'images/contact_us.gif' %}" alt="Empty Cart Animation" class="img-fluid" style="width: 150px; height: 150px;">
+    </div>
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Contact Information</h4>
+        
+                    <div class="contact-info-item">
+                        <h5><i class="fas fa-phone"></i> Call Us</h5>
+                        <p class="contact-detail">+91 77 36 44 80 62</p>
+                    </div>
+        
+                    <div class="contact-info-item">
+                        <h5><i class="fas fa-envelope"></i> Write to Us</h5>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-at"></i> <a href="mailto:achu@globecom.eu">achu@globecom.eu</a></li>
+                            <li><i class="fas fa-at"></i> <a href="mailto:jozef@globecom.eu">jozef@globecom.eu</a></li>
+                            <li><i class="fas fa-at"></i> <a href="mailto:a2z@globecom.eu">a2z@globecom.eu</a></li>
+                            <li><i class="fas fa-at"></i> <a href="mailto:broto@globecom.eu">broto@globecom.eu</a></li>
+                        </ul>
+                    </div>
+        
+                    <div class="contact-info-item">
+                        <h5><i class="fas fa-map-marker-alt"></i> Main Office Location</h5>
+                        <p class="contact-detail">Brototype , Vetturoad</p>
+                        <p class="contact-detail">9200 Kazhakoottom</p>
+                        <p class="contact-detail">Trivandrum</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+      <!-- Form Box -->
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            {% if form_errors %}
+              <div class="alert alert-danger">
+                <strong>Error!</strong> Please correct the following errors:
+                <ul>
+                  {% for error in form_errors %}
+                    <li>{{ error }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+
+            <h4>Send Us a Message</h4>
+            <form action="{% url 'course:submit_contact_form' %}" method="post">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="name" class="form-label">Your Name</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="email" class="form-label">Your Email</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="subject" class="form-label">Subject</label>
+                <input type="text" class="form-control" id="subject" name="subject" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="message" class="form-label">Your Message</label>
+                <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

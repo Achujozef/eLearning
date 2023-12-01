@@ -1,7 +1,7 @@
 from pyexpat.errors import messages
 from django.shortcuts import redirect, render, get_object_or_404
 from .models import *
-
+from .forms import ContactForm
 
 def course_details(request, course_id):
     course = get_object_or_404(Course, id=course_id)
@@ -26,8 +26,30 @@ def course_details(request, course_id):
     context['course_already_purchased'] = course_already_purchased
     return render(request, 'course_details.html', context)
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 def course_list(request):
-    courses = Course.objects.all().order_by('-id')  # Latest courses first
+    # Get all courses
+    all_courses = Course.objects.all().order_by('-id')
+
+    # Number of courses to display per page
+    per_page = 1
+
+    # Create a Paginator instance
+    paginator = Paginator(all_courses, per_page)
+
+    # Get the current page number from the request's GET parameters
+    page = request.GET.get('page')
+
+    try:
+        # Get the Page object for the requested page number
+        courses = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver the first page
+        courses = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g., 9999), deliver the last page of results
+        courses = paginator.page(paginator.num_pages)
 
     context = {
         'courses': courses,
@@ -169,3 +191,28 @@ def update_progress(request, course_id, video_id):
         progress.save()
 
     return redirect('course:course_videos', course_id=course_id)
+
+
+def contact_us(request):
+    return render(request, 'contact_us.html')
+
+def submit_contact_form(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+
+        if form.is_valid():
+            # Form data is valid, you can access it using cleaned_data
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            subject = form.cleaned_data['subject']
+            message = form.cleaned_data['message']
+
+            # Process the form data as needed (e.g., send emails, save to database)
+
+            # Redirect to a success page
+            return render(request, 'success_page.html', {'name': name, 'email': email})
+    else:
+        # If the form is not submitted, create a new form instance
+        form = ContactForm()
+
+    return render(request, 'contact_form.html', {'form': form})

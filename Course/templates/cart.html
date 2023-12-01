@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %} 
 {% block title %}Cart{% endblock %}
 
 {% block content %}
@@ -19,8 +20,48 @@
         </div>
       {% endfor %}
       <p>Total Amount: {{ total_amount }}</p>
+      <!-- Add the purchase button -->
+      <form method="post" action="{% url 'course:purchase_cart' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success">Purchase Now</button>
+      </form>
     {% else %}
-      <p>Your cart is empty.</p>
+      <div id="empty-cart-message" class="text-center">
+        <img src="{% static 'images/empty_cart.gif' %}" alt="Empty Cart Animation" class="img-fluid" style="width: 150px; height: 150px;">
+        <p>Your cart is empty.</p>
+
+        <!-- Carousel with Motivational Quotes -->
+        <div id="quote-carousel" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <blockquote class="blockquote">
+                <p class="mb-0">"Invest in yourself. Your career is the engine of your wealth."</p>
+                <br>
+                <footer class="blockquote-footer">Paul Clitheroe</footer>
+              </blockquote>
+            </div>
+            <!-- Add more quotes as needed -->
+          </div>
+        </div>
+
+        <!-- Go to Courses Button -->
+        <a href="{% url 'course:course_list' %}" class="btn btn-primary mt-3">Go to Courses</a>
+      </div>
     {% endif %}
   </div>
+
+  <!-- Include Bootstrap JS and jQuery (Make sure to include these dependencies) -->
+  <script src="https://code.jquery.com/jquery-3.6.4.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Script for Carousel -->
+  <script>
+    $(document).ready(function(){
+      // Activate Carousel
+      $('#quote-carousel').carousel({
+        interval: 3000,  // Adjust the interval as needed
+        pause: 'hover'
+      });
+    });
+  </script>
 {% endblock %}

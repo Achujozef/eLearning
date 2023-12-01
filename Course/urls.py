@@ -3,6 +3,8 @@ from django.urls import path
 from .views import *
 app_name = 'course'
 urlpatterns = [
+
+
     path('course/<int:course_id>/', course_details, name='course_details'),
     path('courses/', course_list, name='course_list'),
     path('courses/category/<str:category_id>/', filter_courses, name='filter_courses'),
@@ -15,5 +17,7 @@ urlpatterns = [
     path('enrolled-courses/', enrolled_courses, name='enrolled_courses'),
     path('<int:course_id>/videos/', course_videos, name='course_videos'),
     path('<int:course_id>/update_progress/<int:video_id>/', update_progress, name='update_progress'),
+    path('contact/', contact_us, name='contact_us'),
+    path('submit_contact_form/', submit_contact_form, name='submit_contact_form'),
 
 ]
