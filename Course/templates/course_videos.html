@@ -19,11 +19,11 @@
     <h2 class="mt-4">{{ course.title }} Videos</h2>
     <div class="row">
       {% for video in videos %}
-        <div class="col-md-6">
+        <div class="col-md-3">
           <div class="card mb-3">
             <div class="card-body">
               <h5 class="card-title">{{ video.title }}</h5>
-              <iframe width="400" height="215" src="{{ video.video_url }}" frameborder="0" allowfullscreen></iframe>
+              <iframe width="265" height="115" src="{{ video.video_url }}" frameborder="0" allowfullscreen></iframe>
               <div class="embed-responsive embed-responsive-16by9">
                 <!-- Button to trigger modal -->
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#videoModal{{ video.id }}">
@@ -48,7 +48,11 @@
                 </div>
               </div>
 
+              {% if video.id in completed_videos %}
+              <p class="text-success">Video Completed</p>
+            {% else %}
               <a href="{% url 'course:update_progress' course_id=course.id video_id=video.id %}" class="btn btn-primary mt-3">Mark as Completed</a>
+            {% endif %}
             </div>
           </div>
         </div>
@@ -72,7 +76,7 @@
   <!-- Plotly Script -->
 <script>
   const labels = ["Pending", "Completed"];
-  const values = [{{ course.total_modules }},{{ progress.completed_modules }} ];
+  const values = [{{ remaining }},{{ progress.completed_modules }} ];
 
   const data = [{
     labels: labels,

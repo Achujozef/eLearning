@@ -139,7 +139,7 @@
                     <p class="card-text">Unlock the full potential of this course now! Don't miss out on valuable content that can enhance your skills and knowledge.</p>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">
-                            <strong>Price:</strong> {{ course.price }}
+                            <strong>Price:</strong> ₹ {{ course.price }}
                         </li>
                     </ul>
                     {% if course_in_cart %}
@@ -148,7 +148,7 @@
                             <button type="submit" class="btn btn-danger mt-3">Remove from Cart</button>
                         </form>
                     {% elif course_already_purchased %}
-                        <a href="{% url 'course:course_details' course_id=course.id %}" class="btn btn-success mt-3">Go to Course</a>
+                        <a href="{% url 'course:course_videos' course_id=course.id %}" class="btn btn-success mt-3">Go to Course</a>
                     {% else %}
                         <form method="post" action="{% url 'course:add_to_cart' course_id=course.id %}">
                             {% csrf_token %}
@@ -156,7 +156,7 @@
                         </form>
                         <form method="post" action="{% url 'course:purchase_course' course_id=course.id %}">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-primary mt-3">Buy Now</button>
+                            <button type="submit" id="rzp-button1" class="btn btn-primary mt-3">Buy Now</button>
                         </form>
                     {% endif %}
                 </div>
@@ -189,7 +189,39 @@
             <p class="card-text">{{ review.featured_review }}</p>
         </div>
     </div>
+    <h1>{{payment.amount}}</h1>
 {% endfor %}
   </div>
-
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    var options = {
+        "key": "rzp_test_U83p3r8qXusQLO", // Enter the Key ID generated from the Dashboard
+        "amount": "{{payment.amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency": "INR",
+        "name": "eLearning",
+        "description": "Purchase Course",
+        "image": "https://example.com/your_logo",
+        "order_id": "{{payment.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        "handler": function (response){
+            window.location.href ='http://127.0.0.1:8000/purchase/{{course.id}}/'
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response){
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+    });
+    document.getElementById('rzp-button1').onclick = function(e){
+        rzp1.open();
+        e.preventDefault();
+    }
+    </script>
 {% endblock %}

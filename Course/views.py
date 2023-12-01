@@ -2,7 +2,9 @@ from pyexpat.errors import messages
 from django.shortcuts import redirect, render, get_object_or_404
 from .models import *
 from .forms import ContactForm
-
+import razorpay
+from django.conf import settings
+import time
 def course_details(request, course_id):
     course = get_object_or_404(Course, id=course_id)
 
@@ -14,6 +16,10 @@ def course_details(request, course_id):
     course_in_cart = Cart.objects.filter(user=request.user, course=course).exists()
     course_already_purchased = PurchasedCourses.objects.filter(user=request.user, course=course).exists()
     lessons = Lesson.objects.filter(course=course)
+    price_in_float = float(course.price*100)
+    client =razorpay.Client(auth=(settings.KEY,settings.SECRET))
+    payment=client.order.create({'amount':price_in_float,'currency':'INR','payment_capture':1})
+    print(payment)
     context = {
         'course': course,
         'course_details': course_details,
@@ -21,9 +27,11 @@ def course_details(request, course_id):
         'videos': videos,
         'author': author,
         'lessons':lessons,
+        'payment':payment,
     }
     context['course_in_cart'] = course_in_cart
     context['course_already_purchased'] = course_already_purchased
+    
     return render(request, 'course_details.html', context)
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -33,7 +41,7 @@ def course_list(request):
     all_courses = Course.objects.all().order_by('-id')
 
     # Number of courses to display per page
-    per_page = 1
+    per_page = 12
 
     # Create a Paginator instance
     paginator = Paginator(all_courses, per_page)
@@ -90,7 +98,6 @@ def purchase_course(request, course_id):
     if PurchasedCourses.objects.filter(user=request.user, course=course).exists():
        pass
     else:
-        # Create a PurchasedCourses entry
         PurchasedCourses.objects.create(user=request.user, course=course)
        
 
@@ -150,10 +157,21 @@ def cart(request):
         return redirect('login')
     cart_items = Cart.objects.filter(user=request.user)
     total_amount = sum(item.course.price for item in cart_items)
-    context = {
-        'cart_items': cart_items,
-        'total_amount': total_amount,
-    }
+    if cart_items:
+        price_in_float = float(total_amount*100)
+        client =razorpay.Client(auth=(settings.KEY,settings.SECRET))
+        payment=client.order.create({'amount':price_in_float,'currency':'INR','payment_capture':1})
+        context = {
+            'cart_items': cart_items,
+            'total_amount': total_amount,
+            'payment':payment
+        }
+    else:
+        context = {
+            'cart_items': cart_items,
+            'total_amount': total_amount,
+            
+        }
     return render(request, 'cart.html', context)
 
 def enrolled_courses(request):
@@ -169,11 +187,14 @@ def course_videos(request, course_id):
     course = get_object_or_404(Course, id=course_id)
     videos = Video.objects.filter(course=course).order_by('order')
     progress, created = Progress.objects.get_or_create(user=request.user, course=course)
-
+    remaining= course.total_modules - progress.completed_modules
+    completed_videos = CompletedModules.objects.filter(progress=progress, video__in=videos).values_list('video_id', flat=True)
     context = {
         'course': course,
         'videos': videos,
         'progress': progress,
+        'remaining':remaining,
+        'completed_videos': completed_videos,
     }
 
     return render(request, 'course_videos.html', context)
@@ -186,9 +207,14 @@ def update_progress(request, course_id, video_id):
 
     # Check if the video is already completed
     if video.order <= progress.completed_modules + 1:
-        progress.completed_modules += 1
-        progress.video=video
-        progress.save()
+        # Check if the video is not already marked as completed
+        if not CompletedModules.objects.filter(progress=progress, video=video).exists():
+            progress.completed_modules += 1
+            progress.video = video
+            progress.save()
+
+            # Record the completion in CompletedModules
+            CompletedModules.objects.create(progress=progress, video=video)
 
     return redirect('course:course_videos', course_id=course_id)
 

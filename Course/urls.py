@@ -19,5 +19,6 @@ urlpatterns = [
     path('<int:course_id>/update_progress/<int:video_id>/', update_progress, name='update_progress'),
     path('contact/', contact_us, name='contact_us'),
     path('submit_contact_form/', submit_contact_form, name='submit_contact_form'),
-     
+    
+
 ]

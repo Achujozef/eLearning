@@ -1,23 +1,40 @@
+{% load static %} 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Your Website Title{% endblock %}</title>
-    <!-- Bootstrap CSS CDN -->
+    <title>{% block title %}eLearning{% endblock %}</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
-    <!-- Add your custom CSS and other head elements here -->
+
     <style>
-        /* Add your custom styles here */
+        .navbar-nav a.nav-link {
+            transition: background-color 0.9s, color 0.9s;
+        }
+        .navbar-nav a.nav-link:hover {
+            color: #fff; 
+            background-color: #007bff; 
+            border-radius: 12px;
+        }
+        .navbar-brand {
+            background: linear-gradient(to right, rgb(255, 0, 0), rgb(0, 128, 0)); 
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold; 
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); 
+            border-radius: 20px;
+        }
     </style>
 </head>
 <body>
 
-<!-- Navbar -->
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
-        <a class="navbar-brand" href="{% url 'course:course_list' %}">Your Logo</a>
+        <a class="navbar-brand" href="{% url 'course:course_list' %}">eLearning</a>
+
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -36,34 +53,26 @@
                 <li class="nav-item">
                     <a class="nav-link" href="">About Us</a>
                 </li>
-                <li class="nav-item">
-                    <!-- Display login/logout button based on user authentication -->
-                    {% if user.is_authenticated %}
-                        <a class="nav-link btn btn-danger" href="{% url 'logout' %}">Logout</a>
-                    {% else %}
-                        <a class="nav-link btn btn-success" href="{% url 'login' %}">Login</a>
-                    {% endif %}
-                </li>
-                
                 {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'course:cart' %}">Cart</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'course:enrolled_courses' %}">Enrolled Courses</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link btn btn-danger" href="{% url 'logout' %}">Logout</a>
-                </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link btn btn-success" href="{% url 'login' %}">Login</a>
-                </li>
-            {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'course:cart' %}">Cart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'course:enrolled_courses' %}">Enrolled Courses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-danger" href="{% url 'logout' %}">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-success" href="{% url 'login' %}">Login</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>
 </nav>
+
 
 <div class="container mt-4">
     <div class="content">
@@ -71,30 +80,50 @@
     </div>
 </div>
 
-<!-- Bootstrap JS and Popper.js CDN -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Add your custom JavaScript and other scripts here if needed -->
-
-<!-- Footer Section -->
 <footer class="bg-dark text-light mt-5">
     <div class="container py-4">
         <div class="row">
             <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
-                <h5>Udemy</h5>
-                <!-- Add Udemy footer links here -->
+                <h5>eLearning</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#">Python</a></li>
+                    <li><a href="#">Js</a></li>
+                    <li><a href="#">Django</a></li>
+                    <li><a href="#">Flask</a></li>
+                    <li><a href="#">FastAPI</a></li>
+                </ul>
             </div>
             <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
                 <h5>Popular AI Content</h5>
-                <!-- Add Popular AI Content links here -->
+                <ul class="list-unstyled">
+                    <li><a href="#">Social Media Posts</a></li>
+                    <li><a href="#">Product Descriptions.</a></li>
+                    <li><a href="#">Emails.</a></li>
+                    <li><a href="#">Images.</a></li>
+                    <li><a href="#">Blog Posts.</a></li>
+                </ul>
             </div>
             <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
                 <h5>Popular Programs</h5>
-                <!-- Add Popular Programs links here -->
+                <ul class="list-unstyled">
+                    <li><a href="#">Solid Works (solid model design)</a></li>
+                    <li><a href="#">Maple (statistical package)</a></li>
+                    <li><a href="#">SAS (Systems Analysis System)</a></li>
+                    <li><a href="#">Microsoft Office Suite (Word, PowerPoint, Excel, etc.)</a></li>
+                    <li><a href="#">Adobe Creative Cloud Suite (Photoshop, Illustrator, etc.)</a></li>
+                </ul>
             </div>
             <div class="col-lg-3 col-md-6">
                 <h5>Popular Skills</h5>
-                <!-- Add Popular Skills links here -->
+                <ul class="list-unstyled">
+                    <li><a href="#">Planning and organising.</a></li>
+                    <li><a href="#">Initiative and enterprise.</a></li>
+                    <li><a href="#">Problem solving.</a></li>
+                    <li><a href="#">Teamwork.</a></li>
+                    <li><a href="#">Communication.</a></li>
+                </ul>
             </div>
         </div>
     </div>
@@ -102,6 +131,7 @@
         <p>&copy; 2023 Your Website. All rights reserved.</p>
     </div>
 </footer>
+
 
 </body>
 </html>
