@@ -18,6 +18,8 @@
         <button type="submit" class="btn btn-outline-primary">Search</button>
       </div>
     </form>
+ 
+    <img src="{{ course.thumbnail.url }}" class="card-img-top" alt="{{ course.title }}">
 
     <!-- Course cards -->
     <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -25,7 +27,11 @@
         <div class="col">
           <a href="{% url 'course:course_details' course_id=course.id %}" class="text-decoration-none text-dark">
             <div class="card h-100">
+              {% if course.thumbnail %}
               <img src="{{ course.thumbnail.url }}" alt="{{ course.title }} Thumbnail" class="card-img-top">
+              {% else %}
+    <p>No thumbnail available</p>
+{% endif %}
               <div class="card-body">
                 <h5 class="card-title">{{ course.title }}</h5>
                 <p class="card-text">Course Amount: ₹ {{ course.price }}</p>

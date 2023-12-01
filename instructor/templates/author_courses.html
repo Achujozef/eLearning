@@ -1,0 +1,29 @@
+{% extends 'adminbase.html' %}
+
+{% block title %}Your Courses{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="mt-4">Your Courses</h1>
+        <a href="{% url 'add_course' %}" class="btn btn-success mb-3 float-right">Add New Course</a>
+        <div class="row">
+            {% for course in courses %}
+                <div class="col-md-3 mb-4">
+                    <div class="card">
+                        {% if course.thumbnail %}
+                        <img src="{{ course.thumbnail.url }}" class="card-img-top" alt="{{ course.title }}">
+                    {% else %}
+                        <p>No thumbnail available</p>
+                    {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ course.title }}</h5>
+                            <p class="card-text">Rating: {{ course.rating }}</p>
+                            <p class="card-text">Total Modules: {{ course.total_modules }}</p>
+                            <a href="" class="btn btn-primary">Edit</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

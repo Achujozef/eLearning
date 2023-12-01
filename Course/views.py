@@ -5,6 +5,7 @@ from .forms import ContactForm
 import razorpay
 from django.conf import settings
 import time
+from .forms import CourseForm, CourseDetailsForm
 def course_details(request, course_id):
     course = get_object_or_404(Course, id=course_id)
 
@@ -263,3 +264,47 @@ def course_videos_two(request, course_id):
     }
 
     return render(request, 'course_2_videos.html', context)
+
+
+
+
+def add_course(request):
+    if request.method == 'POST':
+        course_form = CourseForm(request.POST, request.FILES)
+        details_form = CourseDetailsForm(request.POST)
+
+        if course_form.is_valid() and details_form.is_valid():
+            course = course_form.save()
+            details = details_form.save(commit=False)
+            details.course = course
+            details.save()
+            return redirect('course:course_list') 
+
+    else:
+        course_form = CourseForm()
+        details_form = CourseDetailsForm()
+
+    return render(request, 'add_course.html', {'course_form': course_form, 'details_form': details_form})
+
+
+def dashboard(request):
+    courses = Course.objects.filter(author=request.user)
+    total_students = UserVideoAccess.objects.filter(course__in=courses).count()
+    average_rating = Course.objects.filter(author=request.user).aggregate(avg_rating=Avg('rating'))['avg_rating']
+    context = {
+        'courses': courses,
+        'total_students': total_students,
+        'average_rating': average_rating,
+    }
+
+    return render(request, 'dashboard.html', context)
+
+def author_courses(request):
+    # Assuming request.user is the author
+    courses = Course.objects.filter(author=request.user)
+
+    context = {
+        'courses': courses,
+    }
+
+    return render(request, 'author_courses.html', context)

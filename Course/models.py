@@ -20,11 +20,11 @@ class Course(models.Model):
     first_description = models.TextField()
     second_description = models.TextField()
     thumbnail = models.ImageField(upload_to='course_thumbnails/', blank=True, null=True)
-    rating = models.DecimalField(max_digits=3, decimal_places=2)
-    students_enrolled = models.PositiveIntegerField()
+    rating = models.DecimalField(max_digits=3, decimal_places=2,null=True,blank=True)
+    students_enrolled = models.PositiveIntegerField(default=0,null=True,blank=True)
     category =models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    author=models.ForeignKey(Author, on_delete=models.CASCADE, null=True)
+    author=models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
     total_modules = models.PositiveIntegerField( default=0)
 
     def __str__(self):
@@ -32,9 +32,9 @@ class Course(models.Model):
 
 class CourseDetails(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    hours_of_video = models.PositiveIntegerField()
-    coding_exercises = models.PositiveIntegerField()
-    articles = models.PositiveIntegerField()
+    hours_of_video = models.PositiveIntegerField(default=0)
+    coding_exercises = models.PositiveIntegerField(default=0)
+    articles = models.PositiveIntegerField(default=0)
     access_on_mobile_and_tv = models.BooleanField(default=True)
     certificate_of_completion = models.BooleanField(default=True)
 
@@ -42,8 +42,8 @@ class CourseDetails(models.Model):
 class Review(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    featured_review = models.TextField()
-    star = models.PositiveIntegerField()
+    featured_review = models.TextField(default=0)
+    star = models.PositiveIntegerField(default=0)
 
 class VideoCategory(models.Model):
     name = models.CharField(max_length=255)
