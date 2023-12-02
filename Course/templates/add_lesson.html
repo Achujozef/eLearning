@@ -5,8 +5,6 @@
 {% block content %}
     <div class="container mt-4">
         <h1>Add and List Lessons for {{ course.title }}</h1>
-        
-        <!-- Form to add a new lesson -->
         <form method="post">
             {% csrf_token %}
             <div class="form-group col-6 mx-auto">
@@ -16,8 +14,6 @@
             <br>
             <button type="submit" class="btn btn-success">Save Lessons</button>
         </form>
-        
-        <!-- Section to list and delete existing lessons -->
         <h2 class="mt-4">Existing Lessons</h2>
         {% if course.lesson_set.all %}
             <ul class="list-group">

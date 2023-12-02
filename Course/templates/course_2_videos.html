@@ -8,10 +8,8 @@
     {% with videos=videos_by_category|get:category %}
       {% if videos %}
         {% for video in videos %}
-          {# Display video details as needed #}
           <p>{{ video.title }}</p>
           <p>{{ video.video_url }}</p>
-          {# Add more fields as necessary #}
         {% endfor %}
       {% else %}
         <p>No videos available for this category.</p>

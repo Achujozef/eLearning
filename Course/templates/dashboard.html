@@ -5,7 +5,7 @@
 {% block content %}
     <div class="container mt-4">
         <div class="card text-center">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header bg-success text-white">
                 <h1 class="mb-0">Dashboard</h1>
             </div>
 
@@ -15,7 +15,7 @@
         </div>
 
         <div class="card mt-4">
-            <div class="card-header bg-info text-white">
+            <div class="card-header bg-success text-white">
                 <h2 class="mb-0">Your Courses</h2>
             </div>
             <div class="card-body">
@@ -26,7 +26,7 @@
                             <th>Enrolled Students</th>
                             <th>Total Modules</th>
                             <th>Average Rating</th>
-                            <!-- Add more columns as needed -->
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -36,7 +36,7 @@
                                 <td>{{ course.students_enrolled }}</td>
                                 <td>{{ course.total_modules }}</td>
                                 <td>{{ course.rating }}</td>
-                                <!-- Add more columns as needed -->
+                            
                             </tr>
                         {% endfor %}
                     </tbody>

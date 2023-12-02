@@ -2,12 +2,11 @@
 
 {% block content %}
   <div class="container mt-4">
-    <div class="card text-center">
-      <div class="card-header bg-primary text-white">
+    <div class="card text-center ">
+      <div class="card-header bg-success text-white">
         <h1 class="mb-0">User Registration</h1>
       </div>
-
-      <div class="card-body">
+      <div class="card-body ">
         <form method="post" class="text-left">
             {% csrf_token %}
             
@@ -31,7 +30,7 @@
             </div>
             <br>
 
-            <!-- Add any additional fields for registration as needed -->
+
 
             <button type="submit" class="btn btn-success btn-block ">Register</button>
         </form>

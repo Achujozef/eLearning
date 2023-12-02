@@ -3,25 +3,23 @@
   <div class="container mt-5">
     <h2 class="text-center mb-4">All Courses</h2>
 
-    <!-- Filter options -->
+
     <div class="text-center mb-4">
-      <a href="{% url 'course:course_list' %}" class="btn btn-primary">All Courses</a>
+      <a href="{% url 'course:course_list' %}" class="btn btn-success">All Courses</a>
       {% for category in categories %}
         <a href="{% url 'course:filter_courses' category.id %}" class="btn btn-secondary">{{ category.title }}</a>
       {% endfor %}
     </div>
 
-    <!-- Search bar -->
+
     <form action="{% url 'course:search_courses' %}" method="get" class="mb-4">
       <div class="input-group">
         <input type="text" name="q" class="form-control" placeholder="Search courses">
-        <button type="submit" class="btn btn-outline-primary">Search</button>
+        <button type="submit" class="btn btn-outline-success">Search</button>
       </div>
     </form>
  
     <img src="{{ course.thumbnail.url }}" class="card-img-top" alt="{{ course.title }}">
-
-    <!-- Course cards -->
     <div class="row row-cols-1 row-cols-md-4 g-4">
       {% for course in courses %}
           <div class="col">
@@ -82,12 +80,11 @@
     </div>
   </div>
 
-  <!-- Testimonials -->
   <div class="container mt-5">
     <h2 class="text-center mb-4">Trusted by Over 15,000 Companies</h2>
     <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-inner">
-        <!-- Dummy testimonials (adjust as needed) -->
+
         <div class="carousel-item active">
           <p class="lead">"Coursera has been a game-changer for our employees. The quality of courses is unmatched."</p>
           <p class="text-muted">- John Doe, CEO, ABC Company</p>
@@ -96,7 +93,7 @@
           <p class="lead">"The vast selection of courses and flexibility helped our team upskill quickly and efficiently."</p>
           <p class="text-muted">- Jane Smith, HR Manager, XYZ Inc.</p>
         </div>
-        <!-- Add more testimonials as needed -->
+
       </div>
       <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -109,11 +106,10 @@
     </div>
   </div>
 
-  <!-- Company Logos -->
+
   <div class="container mt-5">
     <h2 class="text-center mb-4">Trusted by These Companies</h2>
     <div class="row row-cols-2 row-cols-md-4 g-4">
-      <!-- Company logos (replace with actual logos) -->
 
     </div>
   </div>
@@ -121,27 +117,3 @@
 
 
 
-      {% comment %} <div class="col">
-        <img src="path/to/volkswagen-logo.png" alt="Volkswagen Logo" class="img-fluid">
-      </div>
-      <div class="col">
-        <img src="path/to/samsung-logo.png" alt="Samsung Logo" class="img-fluid">
-      </div>
-      <div class="col">
-        <img src="path/to/cisco-logo.png" alt="Cisco Logo" class="img-fluid">
-      </div>
-      <div class="col">
-        <img src="path/to/att-logo.png" alt="AT&T Logo" class="img-fluid">
-      </div>
-      <div class="col">
-        <img src="path/to/pandg-logo.png" alt="Procter & Gamble Logo" class="img-fluid">
-      </div>
-      <div class="col">
-        <img src="path/to/hpe-logo.png" alt="Hewlett Packard Enterprise Logo" class="img-fluid">
-      </div>
-      <div class="col">
-        <img src="path/to/citi-logo.png" alt="Citi Logo" class="img-fluid">
-      </div>
-      <div class="col">
-        <img src="path/to/ericsson-logo.png" alt="Ericsson Logo" class="img-fluid">
-      </div> {% endcomment %}

@@ -19,12 +19,12 @@
                             <h5 class="card-title">{{ course.title }}</h5>
                             <p class="card-text">Rating: {{ course.rating }}</p>
                             <p class="card-text">Total Modules: {{ course.total_modules }}</p>
-                            <a href="{% url 'course:edit_course' course.id %}" class="btn btn-primary">Edit</a>
-                            <a href="{% url 'course:add_video' course.id %}" class="btn btn-primary">Add Videos</a>
-                            <a href="{% url 'course:add_lesson' course.id %}" class="btn btn-primary">Lessons</a>
+                            <a href="{% url 'course:edit_course' course.id %}" class="btn btn-success">Edit</a>
+                            <a href="{% url 'course:add_video' course.id %}" class="btn btn-success">Add Videos</a>
+                            <a href="{% url 'course:add_lesson' course.id %}" class="btn btn-success">Lessons</a>
                         <br></br>
     
-                            <a href="{% url 'course:list_videos_edit' course.id %}" class="btn btn-primary">Edit Videos</a>
+                            <a href="{% url 'course:list_videos_edit' course.id %}" class="btn btn-success">Edit Videos</a>
                             <form method="post" action="{% url 'course:delete_course' course.id %}" style="display: inline;">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-danger">Delete</button>

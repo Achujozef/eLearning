@@ -59,3 +59,7 @@ class AuthorLoginView(FormView):
             return super().form_valid(form)
         else:
             return HttpResponseForbidden("Access Denied: Only staff members are allowed to log in.")
+        
+def Admin_logout_view(request):
+    logout(request)
+    return redirect('author_login')  

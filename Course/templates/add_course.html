@@ -5,15 +5,13 @@
 {% block content %}
 <div class="container mt-4">
     <div class="card text-center">
-        <div class="card-header bg-primary text-white">
+        <div class="card-header bg-success text-white">
             <h1 class="mb-0">Add New Course</h1>
         </div>
 
         <div class="card-body">
             <form method="post" enctype="multipart/form-data" class="text-left">
                 {% csrf_token %}
-                
-                <!-- Assuming course_form and details_form have similar fields as your first template -->
                 <div class="form-group col-6 mx-auto">
                     {{ course_form.as_p }}
                 </div>
@@ -24,7 +22,7 @@
                 </div>
                 <br>
 
-                <button type="submit" class="btn btn-primary btn-block">Save Course</button>
+                <button type="submit" class="btn btn-success btn-block">Save Course</button>
             </form>
         </div>
     </div>

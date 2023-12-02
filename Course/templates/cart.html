@@ -20,7 +20,7 @@
         </div>
       {% endfor %}
       <p>Total Amount: ₹ {{ total_amount }}</p>
-      <!-- Add the purchase button -->
+
       <form method="post" action="{% url 'course:purchase_cart' %}">
         {% csrf_token %}
         <button type="submit" id="rzp-button1" class="btn btn-success">Purchase Now</button>
@@ -30,7 +30,7 @@
         <img src="{% static 'images/empty_cart.gif' %}" alt="Empty Cart Animation" class="img-fluid" style="width: 150px; height: 150px;">
         <p>Your cart is empty.</p>
 
-        <!-- Carousel with Motivational Quotes -->
+
         <div id="quote-carousel" class="carousel slide" data-ride="carousel">
           <div class="carousel-inner">
             <div class="carousel-item active">
@@ -43,22 +43,22 @@
           </div>
         </div>
 
-        <!-- Go to Courses Button -->
-        <a href="{% url 'course:course_list' %}" class="btn btn-primary mt-3">Go to Courses</a>
+
+        <a href="{% url 'course:course_list' %}" class="btn btn-success mt-3">Go to Courses</a>
       </div>
     {% endif %}
   </div>
 
-  <!-- Include Bootstrap JS and jQuery (Make sure to include these dependencies) -->
+
   <script src="https://code.jquery.com/jquery-3.6.4.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
  
-  <!-- Script for Carousel -->
+
   <script>
     $(document).ready(function(){
-      // Activate Carousel
+
       $('#quote-carousel').carousel({
-        interval: 3000,  // Adjust the interval as needed
+        interval: 3000,  
         pause: 'hover'
       });
     });
@@ -66,13 +66,13 @@
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script>
     var options = {
-        "key": "rzp_test_U83p3r8qXusQLO", // Enter the Key ID generated from the Dashboard
-        "amount": "{{payment.amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "key": "rzp_test_U83p3r8qXusQLO", 
+        "amount": "{{payment.amount}}", 
         "currency": "INR",
         "name": "eLearning",
         "description": "Purchase Course",
         "image": "https://example.com/your_logo",
-        "order_id": "{{payment.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        "order_id": "{{payment.id}}", 
         "handler": function (response){
             window.location.href ='http://127.0.0.1:8000/purchase_cart/'
         },
