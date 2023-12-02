@@ -48,10 +48,10 @@
                     <a class="nav-link" href="{% url 'course:course_list' %}">Courses</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">Career</a>
+                    <a class="nav-link" href="{% url 'course:career_opportunities' %}">Career</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">About Us</a>
+                    <a class="nav-link" href="{% url 'course:contact_us' %}">Contact Us</a>
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">

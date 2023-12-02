@@ -22,27 +22,29 @@
     <img src="{{ course.thumbnail.url }}" class="card-img-top" alt="{{ course.title }}">
 
     <!-- Course cards -->
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="row row-cols-1 row-cols-md-4 g-4">
       {% for course in courses %}
-        <div class="col">
-          <a href="{% url 'course:course_details' course_id=course.id %}" class="text-decoration-none text-dark">
-            <div class="card h-100">
-              {% if course.thumbnail %}
-              <img src="{{ course.thumbnail.url }}" alt="{{ course.title }} Thumbnail" class="card-img-top">
-              {% else %}
-    <p>No thumbnail available</p>
-{% endif %}
-              <div class="card-body">
-                <h5 class="card-title">{{ course.title }}</h5>
-                <h5 class="text-warning">{{ course.rating }} &#9733;</h5>
-                <p class="card-text">Course Amount: ₹ {{ course.price }}</p>
-                <p class="card-text">Author: {{ course.author.username }}</p>
-              </div>
-            </div>
-          </a>
-        </div>
+          <div class="col">
+              <a href="{% url 'course:course_details' course_id=course.id %}" class="text-decoration-none text-dark">
+                  <div class="card h-100 border-0 shadow">
+                      {% if course.thumbnail %}
+                          <img src="{{ course.thumbnail.url }}" alt="{{ course.title }} Thumbnail" class="card-img-top">
+                      {% else %}
+                          <p class="text-center bg-light p-3 mb-0">No thumbnail available</p>
+                      {% endif %}
+                      <div class="card-body">
+                          <h5 class="card-title font-weight-bold">{{ course.title }}</h5>
+                          <h5 class="text-warning font-weight-bold">{{ course.rating }} &#9733;</h5>
+                          <p class="card-text font-weight-bold">Course Amount: ₹ {{ course.price }}</p>
+                          <p class="card-text font-italic">Author: {{ course.author.username }}</p>
+                      </div>
+                  </div>
+              </a>
+          </div>
       {% endfor %}
-    </div>
+  </div>
+
+
     <div class="mt-4">
       <ul class="pagination justify-content-center">
         {% if courses.has_previous %}

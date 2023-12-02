@@ -6,7 +6,7 @@ urlpatterns = [
 
 
     path('course/<int:course_id>/', course_details, name='course_details'),
-    path('courses/', course_list, name='course_list'),
+    path('', course_list, name='course_list'),
     path('courses/category/<str:category_id>/', filter_courses, name='filter_courses'),
     path('courses/search/', search_courses, name='search_courses'),
     path('purchase/<int:course_id>/', purchase_course, name='purchase_course'),
@@ -29,4 +29,6 @@ urlpatterns = [
     path('delete_video/<int:course_id>/<int:video_id>/', delete_video, name='delete_video'),
     path('delete_lesson/<int:course_id>/<int:lesson_id>/', delete_lesson, name='delete_lesson'),
     path('delete_course/<int:course_id>/', delete_course, name='delete_course'),
+    path('career/', career_opportunities, name='career_opportunities'),
 ]
+

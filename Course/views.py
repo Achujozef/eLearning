@@ -185,6 +185,9 @@ def update_progress(request, course_id, video_id):
 
 def contact_us(request):
     return render(request, 'contact_us.html')
+def career_opportunities(request):
+    return render(request, 'career.html')
+
 
 def submit_contact_form(request):
     if request.method == 'POST':
