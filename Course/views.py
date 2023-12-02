@@ -21,7 +21,7 @@ def course_details(request, course_id):
         course_details = CourseDetails.objects.get(course=course)
         reviews = Review.objects.filter(course=course)
         videos = Video.objects.filter(course=course)
-        author = Author.objects.get(id=course.author.id)
+        author = CustomUser.objects.get(id=course.author.id)
         course_in_cart = Cart.objects.filter(user=request.user, course=course).exists()
         course_already_purchased = PurchasedCourses.objects.filter(user=request.user, course=course).exists()
         lessons = Lesson.objects.filter(course=course)
@@ -104,6 +104,8 @@ def purchase_course(request, course_id):
             pass
         else:
             PurchasedCourses.objects.create(user=request.user, course=course)
+            course.students_enrolled += 1
+            course.save()
         return redirect('course:course_details', course_id=course_id)
     except Exception as e:
         return render(request, 'error.html', {'error_message': str(e)})

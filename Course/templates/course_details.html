@@ -3,7 +3,7 @@
 
 {% block content %}
 
-  <!-- Top Section: Thumbnail, Title, and First Description -->
+
   <div class="container mt-4">
     <div class="row">
       <div class="col-md-6">
@@ -17,27 +17,15 @@
     </div>
   </div>
 
-  <!-- Author Details Card -->
   <div class="container mt-4">
     <div class="card ">
       <div class="card-body">
-        <h2 class="card-title">Author: {{ author.name }}</h2>
-        <img src="{{ author.image.url }}" alt="{{ author.name }} Image" class="img-fluid rounded-circle mb-3" width="100">
+        <h2 class="card-title">Author: {{ author.username }}</h2>
+        <img src="{{ author.profile_picture.url }}" alt="{{ author.username }} Image" class="img-fluid rounded-circle mb-3" width="100">
         <p class="card-text">{{ author.bio }}</p>
       </div>
     </div>
   </div>
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -58,45 +46,21 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  <!-- Course Details Section -->
   <div class="container mt-4">
-    <!-- Video Section -->
+
     {% if videos %}
       <div class="row">
         <div class="col-md-6">
     {% for video in videos %}
           {% if video.is_free %}
-            <!-- Display Free Video -->
+
             <h2 class="mt-4">{{video.title}}</h2>
             <iframe width="400" height="215" src="{{ video.video_url }}" frameborder="0" allowfullscreen></iframe>
           {% endif %}
           {% endfor %}
         </div>
         <div class="col-md-6">
-            <!-- Course Details Card -->
+
             <div class="card">
                 <div class="card-body">
                     <h2 class="card-title">Course Details <i class="fas fa-info-circle"></i></h2>
@@ -170,9 +134,7 @@
       </div>
     {% endif %}
 
-<!--Add the course.second_description here -->
 
-    <!-- Reviews Section -->
     <h2 class="mt-4">Reviews</h2>
     {% for review in reviews %}
     <div class="card">

@@ -12,7 +12,7 @@ from django.views.generic.edit import FormView
 class RegisterView(CreateView):
     template_name = 'register.html'
     form_class = RegistrationForm
-    success_url = reverse_lazy('home')  
+    success_url = reverse_lazy('course:course_list')  
     def form_valid(self, form):
         response = super().form_valid(form)
         login(self.request, self.object)
@@ -63,3 +63,6 @@ class AuthorLoginView(FormView):
 def Admin_logout_view(request):
     logout(request)
     return redirect('author_login')  
+
+
+
