@@ -1,5 +1,11 @@
-
+﻿asgiref
+certifi
+charset-normalizer
 Django
+idna
 Pillow
 razorpay
 requests
+sqlparse
+tzdata
+urllib3
